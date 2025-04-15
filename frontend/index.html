@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sashank Konathala - Resume</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="./style/style.css"/>
 </head>
 <body>
   <header>
@@ -16,6 +16,11 @@
       <a href="https://github.com/Sashank0866" target="_blank">GitHub</a>
     </p>
   </header>
+
+  <!-- Visitor counter placed just below the header -->
+  <div id="visitor-counter-container" style="text-align: center; margin-bottom: 20px;">
+    <p style="font-size: 1.2rem;">Visitor Count: <span id="visitor-counter">Loading...</span></p>
+  </div>
 
   <section>
     <h2>Objective</h2>
@@ -80,24 +85,9 @@
       <li>Developed affordability metrics for policymakers.</li>
     </ul>
   </section>
+
   <button id="theme-toggle">🌞 Light Mode</button>
 
-<script>
-  const toggleBtn = document.getElementById("theme-toggle");
-  const body = document.body;
-
-  function setTheme(mode) {
-    body.classList.toggle("light-mode", mode === "light");
-    toggleBtn.textContent = mode === "light" ? "🌙 Dark Mode" : "🌞 Light Mode";
-  }
-
-  // Default to dark mode
-  setTheme("dark");
-
-  toggleBtn.addEventListener("click", () => {
-    const isLight = body.classList.contains("light-mode");
-    setTheme(isLight ? "dark" : "light");
-  });
-</script>
+  <script src="./script/logic.js"></script>
 </body>
 </html>

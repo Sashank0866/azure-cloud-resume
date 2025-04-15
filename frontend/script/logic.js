@@ -1,16 +1,38 @@
 window.addEventListener('DOMContentLoaded', function() {
-    // Replace with your actual Function App URL and endpoint path
-    const functionUrl = "http://localhost:7071/api/http_trigger";
+    // Replace the URL below with your actual Azure Function endpoint
+    const functionUrl = 'http://localhost:7071/api/http_trigger';
 
-    // Trigger the Azure Function with a GET or POST request
     fetch(functionUrl)
-      .then(response => response.text())
-      .then(result => {
-        console.log("Function triggered successfully. Updated counter:", result);
-        // Optionally, you can update an element on your page with the counter value
-        // document.getElementById('visitorCounter').innerText = result;
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok: ' + response.status);
+        }
+        return response.text();
+      })
+      .then(count => {
+        const counterElement = document.getElementById('visitor-counter');
+        counterElement.innerText = count;
+        console.log('Visitor count received:', count);
       })
       .catch(error => {
-        console.error("Error triggering function:", error);
+        console.error('Error fetching visitor count:', error);
+        document.getElementById('visitor-counter').innerText = 'N/A';
       });
+    
+    // Theme toggle functionality
+    const toggleBtn = document.getElementById("theme-toggle");
+    const body = document.body;
+
+    function setTheme(mode) {
+      body.classList.toggle("light-mode", mode === "light");
+      toggleBtn.textContent = mode === "light" ? "🌙 Dark Mode" : "🌞 Light Mode";
+    }
+
+    // Default to dark mode
+    setTheme("dark");
+
+    toggleBtn.addEventListener("click", () => {
+      const isLight = body.classList.contains("light-mode");
+      setTheme(isLight ? "dark" : "light");
+    });
   });
