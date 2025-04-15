@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sashank Konathala - Resume</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header>
+    <h1>Sashank Konathala</h1>
+    <p>
+      📞 +1 (613) 807-9479 |
+      📧 <a href="mailto:sashank.k04@gmail.com">sashank.k04@gmail.com</a> |
+      <a href="https://linkedin.com/in/sashank-konathala/" target="_blank">LinkedIn</a> |
+      <a href="https://github.com/Sashank0866" target="_blank">GitHub</a>
+    </p>
+  </header>
+
+  <section>
+    <h2>Objective</h2>
+    <p>To apply my experience in cloud data engineering and ETL pipeline design to deliver efficient, scalable analytics solutions. I am passionate about data automation, cloud, and using modern tools to transform complex data into actionable insights.</p>
+  </section>
+
+  <section>
+    <h2>Skills</h2>
+    <ul>
+      <li><strong>Programming:</strong> Python, T-SQL, PL/SQL, PowerShell</li>
+      <li><strong>Big Data:</strong> Apache Spark, Spark SQL</li>
+      <li><strong>Frameworks:</strong> PySpark, Apache Airflow</li>
+      <li><strong>ETL:</strong> Azure Data Factory, Databricks, Stream Analytics</li>
+      <li><strong>Azure:</strong> ADLS, Azure SQL DB, Azure Synapse Analytics</li>
+      <li><strong>Databases:</strong> Azure SQL, Synapse, Oracle</li>
+      <li><strong>Visualization:</strong> Power BI, Tableau, Azure ML</li>
+      <li><strong>Statistical Tools:</strong> SPSS</li>
+      <li><strong>CI/CD & Tools:</strong> Git, Azure DevOps, Jira</li>
+      <li><strong>Certification:</strong> Azure Data Engineer Associate - DP 203</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Education</h2>
+    <ul>
+      <li><strong>University of Ottawa</strong> – MEng. Computer Engineering (2024), GPA: 3.8/4</li>
+      <li><strong>IIT Kanpur</strong> – Certification, Data Science (2020)</li>
+      <li><strong>SRM Institute</strong> – B.S. Computer Science (2019)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Professional Experience</h2>
+    <h3>Tata Consultancy Services – Data Engineer (2019–2021)</h3>
+    <ul>
+      <li>Led a cloud transformation for a supply chain app, migrating to Azure without service interruptions.</li>
+      <li>Built ETL pipelines using ADF, Databricks, SparkSQL, and Airflow with 99.5% issue resolution.</li>
+      <li>Optimized SQL queries and schema performance, improving response time by 40%.</li>
+      <li>Built Power BI dashboards, cutting report time by 65% and boosting insights.</li>
+      <li>Mentored new team members and reduced onboarding time to 2 weeks.</li>
+      <li>Enabled data governance using Azure Data Catalog for lineage and compliance.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Projects</h2>
+    <h3>Understanding User Privacy Concerns (Apr 2024)</h3>
+    <ul>
+      <li>Surveyed 34 participants across 4 privacy dimensions; found 97% awareness of cookie tracking.</li>
+      <li>Used SPSS for analysis; strong correlation found (r = .845) between privacy literacy and control.</li>
+    </ul>
+
+    <h3>Atrial Fibrillation Detection Web App (Apr 2024)</h3>
+    <ul>
+      <li>Preprocessed ECG data; built ML models with XGBoost, SVM, RF.</li>
+      <li>Deployed Flask API on Heroku; added chatbot with Google Dialogflow.</li>
+    </ul>
+
+    <h3>Food Prices for Nutrition (Dec 2023)</h3>
+    <ul>
+      <li>Created Tableau dashboard with choropleth maps for 177 countries.</li>
+      <li>Developed affordability metrics for policymakers.</li>
+    </ul>
+  </section>
+  <button id="theme-toggle">🌞 Light Mode</button>
+
+<script>
+  const toggleBtn = document.getElementById("theme-toggle");
+  const body = document.body;
+
+  function setTheme(mode) {
+    body.classList.toggle("light-mode", mode === "light");
+    toggleBtn.textContent = mode === "light" ? "🌙 Dark Mode" : "🌞 Light Mode";
+  }
+
+  // Default to dark mode
+  setTheme("dark");
+
+  toggleBtn.addEventListener("click", () => {
+    const isLight = body.classList.contains("light-mode");
+    setTheme(isLight ? "dark" : "light");
+  });
+</script>
+</body>
+</html>
