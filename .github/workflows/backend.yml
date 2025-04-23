@@ -5,33 +5,15 @@ on:
     branches: [ main ]
     paths:
       - 'backend/api/**'
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
-  test-and-deploy:
+  deploy-and-test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend/api
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Setup Node.js for Cypress
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install Cypress
-        run: |
-          npm init -y
-          npm install --save-dev cypress
-
-      - name: Run Cypress API tests
-        env:
-          FUNCTION_URL: ${{ secrets.FUNCTION_URL }}
-        run: npx cypress run --config-file cypress.config.js --env FUNCTION_URL=$FUNCTION_URL
 
       - name: Azure Login
         uses: azure/login@v1
@@ -42,4 +24,23 @@ jobs:
         uses: azure/functions-action@v1
         with:
           app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
-          package: ./function_code   # <- Adjust if needed
+          package: backend/api/function_code  
+
+      - name: Wait for Azure Function to warm up
+        run: sleep 20  
+
+      - name: Setup Node.js for Cypress
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Cypress
+        run: |
+            npm init -y
+            npm install --save-dev cypress
+
+      - name: Run Cypress API tests
+        working-directory: backend/api
+        env:
+          FUNCTION_URL: ${{ secrets.FUNCTION_URL }}
+        run: npx cypress run --config-file cypress.config.js --env FUNCTION_URL=$FUNCTION_URL
