@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'backend/api/**'
+  workflow_dispatch: 
 
 jobs:
   test-and-deploy:
