@@ -18,7 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up Python for Azure Functions deployment
+      # Set up Python for dependencies
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -27,29 +27,39 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r function_code/requirements.txt
 
+      # Set up Node.js and Cypress
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Cypress and dependencies
+        run: npm install
+
+      # Install Azure Functions Core Tools
+      - name: Install Azure Functions Core Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl gnupg
+          curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+          sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
+          sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/azure-cli.list'
+          sudo apt-get update
+          sudo apt-get install azure-functions-core-tools-4
+
+      # Azure Login
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_LOGIN }}
 
-      - name: Deploy Azure Function App
-        uses: azure/functions-action@v1
-        with:
-            app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
-            package: backend/api/function_code  
+      # Deploy using `func azure functionapp publish`
+      - name: Publish Function App using Azure Functions Core Tools
+        run: func azure functionapp publish funcTocDB
+        working-directory: backend/api/function_code
 
-      # Cypress test section
-      - name: Setup Node.js for Cypress
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install Cypress
-        run: |
-              npm init -y
-              npm install --save-dev cypress
-
+      # Run Cypress tests after deployment
       - name: Run Cypress API tests
         env:
           FUNCTION_URL: ${{ secrets.FUNCTION_URL }}
-        run: npx cypress run --config-file cypress.config.js --env FUNCTION_URL=$FUNCTION_URL
+        run: npx cypress run --config-file ../cypress.config.js --env FUNCTION_URL=$FUNCTION_URL
