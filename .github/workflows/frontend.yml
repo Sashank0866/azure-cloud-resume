@@ -56,3 +56,11 @@ jobs:
               --source upload \
               --destination \$web \
               --overwrite
+
+      - name: Purge Azure CDN endpoint
+        run: |
+          az cdn endpoint purge \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --profile-name ${{ secrets.CDN_PROFILE_NAME }} \
+            --name ${{ secrets.CDN_ENDPOINT_NAME }} \
+            --content-paths '/*'
