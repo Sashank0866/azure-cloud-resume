@@ -43,11 +43,16 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_LOGIN }}
 
-      - name: Publish to Azure Blob Storage
+      - name: Upload only static files
         run: |
-          az storage blob upload-batch \
-            --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
-            --auth-mode login \
-            --source . \
-            --destination \$web \
-            --overwrite
+            mkdir upload
+            cp index.html upload/
+            cp -r style upload/
+            cp -r script upload/
+        
+            az storage blob upload-batch \
+              --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
+              --auth-mode login \
+              --source upload \
+              --destination \$web \
+              --overwrite
