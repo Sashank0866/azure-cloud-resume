@@ -57,7 +57,7 @@ jobs:
 
       # Deploy using `func azure functionapp publish`
       - name: Publish Function App using Azure Functions Core Tools
-        run: func azure functionapp publish funcTocDB
+        run: func azure functionapp publish funcTocDB --python  
         working-directory: backend/api/function_code
 
       # Run Cypress tests after deployment
