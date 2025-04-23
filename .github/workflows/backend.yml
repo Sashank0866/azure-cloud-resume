@@ -44,8 +44,10 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install Cypress and dependencies
-        run: npm install
+      - name: Install Cypress
+        run: |
+              npm init -y
+              npm install --save-dev cypress
 
       - name: Run Cypress API tests
         env:
