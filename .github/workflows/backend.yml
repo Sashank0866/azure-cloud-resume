@@ -64,4 +64,4 @@ jobs:
       - name: Run Cypress API tests
         env:
           FUNCTION_URL: ${{ secrets.FUNCTION_URL }}
-        run: npx cypress run --config-file ../cypress.config.js --env FUNCTION_URL=$FUNCTION_URL
+        run: npx cypress run --config-file cypress.config.js --env FUNCTION_URL=$FUNCTION_URL
