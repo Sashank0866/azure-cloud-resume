@@ -1,6 +1,12 @@
 window.addEventListener('DOMContentLoaded', function() {
-    // Replace the URL below with your actual Azure Function endpoint
-    const functionUrl = 'http://localhost:7071/api/http_trigger';
+    const metaTag = document.querySelector('meta[name="function-endpoint"]');
+    const functionUrl = metaTag ? metaTag.getAttribute('content') : '';
+
+  if (!functionUrl) {
+    console.error('Function endpoint URL is not set in the meta tag.');
+    document.getElementById('visitor-counter').innerText = 'N/A';
+    return;
+  }
 
     fetch(functionUrl)
       .then(response => {
