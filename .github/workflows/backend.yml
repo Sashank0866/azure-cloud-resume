@@ -1,0 +1,49 @@
+name: Backend CI & Deploy Azure Function
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'backend/api/**'
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend/api
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 1) Install Node.js and Cypress, then run API tests
+      - name: Setup Node.js for Cypress
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Cypress
+        run: |
+          npm init -y
+          npm install --save-dev cypress
+
+      - name: Run Cypress API tests
+        env:
+          FUNCTION_URL: ${{ secrets.FUNCTION_URL }}
+        run: |
+          npx cypress run \
+            --spec "cypress/e2e/api.spec.js" \
+            --env FUNCTION_URL=$FUNCTION_URL
+
+      # 2) If tests passed, log in and deploy the Function App
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Azure Function App
+        uses: azure/functions-action@v1
+        with:
+          app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
+          package: .

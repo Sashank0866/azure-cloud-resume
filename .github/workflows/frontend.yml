@@ -1,0 +1,52 @@
+name: Frontend CI & Deploy to Blob Storage
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'frontend/**'
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Inject Function URL into HTML
+        # Replace the placeholder REPLACE_ME in your meta tag
+        run: |
+          sed -i "s|REPLACE_ME|${{ secrets.FUNCTION_SECRET }}|g" index.html
+
+      - name: Install Cypress & server deps
+        run: |
+          npm init -y
+          npm install --save-dev cypress http-server wait-on
+
+      - name: Serve site locally for UI tests
+        run: |
+          npx http-server . -p 5000 &
+          npx wait-on http://localhost:5000
+
+      - name: Run Cypress UI tests
+        env:
+          SITE_URL: http://localhost:5000
+        run: npx cypress run --spec "cypress/e2e/ui.spec.js"
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_LOGIN }}
+
+      - name: Publish to Azure Blob Storage
+        run: |
+          az storage blob upload-batch \
+            --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
+            --auth-mode login \
+            --source . \
+            --destination \$web \
+            --overwrite
