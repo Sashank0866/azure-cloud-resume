@@ -20,13 +20,9 @@ jobs:
       - name: Inject Function URL into HTML
         run: sed -i "s|REPLACE_ME|${{ secrets.FUNCTION_SECRET }}|g" index.html
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: npm ci
+      - name: Install Cypress & server deps
+        run: |
+          npm init -y
 
       - name: Install test tools
         run: npm install --save-dev cypress http-server wait-on
