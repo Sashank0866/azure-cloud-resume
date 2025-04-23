@@ -17,7 +17,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 1) Install Node.js and Cypress, then run API tests
       - name: Setup Node.js for Cypress
         uses: actions/setup-node@v3
         with:
@@ -31,16 +30,12 @@ jobs:
       - name: Run Cypress API tests
         env:
           FUNCTION_URL: ${{ secrets.FUNCTION_URL }}
-        run: |
-          npx cypress run \
-            --spec "cypress/e2e/api.spec.js" \
-            --env FUNCTION_URL=$FUNCTION_URL
+        run: npx cypress run --config-file cypress.config.js --env FUNCTION_URL=$FUNCTION_URL
 
-      # 2) If tests passed, log in and deploy the Function App
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_LOGIN }}
 
       - name: Deploy Azure Function App
         uses: azure/functions-action@v1
