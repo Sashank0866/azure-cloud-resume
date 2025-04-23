@@ -10,10 +10,22 @@ on:
 jobs:
   deploy-and-test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend/api
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      # Set up Python for Azure Functions deployment
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install -r function_code/requirements.txt
 
       - name: Azure Login
         uses: azure/login@v1
@@ -23,24 +35,19 @@ jobs:
       - name: Deploy Azure Function App
         uses: azure/functions-action@v1
         with:
-          app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
-          package: backend/api/function_code  
+          app-name: funcTocDB
+          package: function_code
 
-      - name: Wait for Azure Function to warm up
-        run: sleep 20  
-
+      # Cypress test section
       - name: Setup Node.js for Cypress
         uses: actions/setup-node@v3
         with:
           node-version: '16'
 
-      - name: Install Cypress
-        run: |
-            npm init -y
-            npm install --save-dev cypress
+      - name: Install Cypress and dependencies
+        run: npm install
 
       - name: Run Cypress API tests
-        working-directory: backend/api
         env:
           FUNCTION_URL: ${{ secrets.FUNCTION_URL }}
         run: npx cypress run --config-file cypress.config.js --env FUNCTION_URL=$FUNCTION_URL
